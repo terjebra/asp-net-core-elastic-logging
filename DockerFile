@@ -1,0 +1,11 @@
+FROM microsoft/aspnetcore-build as build
+WORKDIR /src
+COPY . .
+RUN dotnet restore
+RUN dotnet publish --output /api \
+  --configuration Release
+
+FROM microsoft/aspnetcore
+COPY --from=build /api /api
+WORKDIR /api
+ENTRYPOINT ["dotnet", "API.dll"]
